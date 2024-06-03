@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food and Nutrition Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuotZgGmD-sunf58RAMWo4OCxq8AIGP3WY2g&s);
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    filter: brightness(50%);
+}
+    </style>
+</head>
+<body>
+    <div class="background-image"></div>
+    <div class="container">
+        <h1>Food and Nutrition Tracker</h1>
+        <form method="POST">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" value="{{ request.form.date or date.today() }}" required>
+            <label for="name">Food Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="protein">Protein (g):</label>
+            <input type="number" step="0.1" id="protein" name="protein" required>
+            <label for="fat">Fat (g):</label>
+            <input type="number" step="0.1" id="fat" name="fat" required>
+            <label for="carbs">Carbs (g):</label>
+            <input type="number" step="0.1" id="carbs" name="carbs" required>
+            <label for="calories">Calories(kcal):</label>
+            <input type="number" step="0.1" id="calories" name="calories" required>
+            <button type="submit">Add Food</button>
+        </form>
+
+        <h2>Today's Food Intake</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Protein (g)</th>
+                    <th>Fat (g)</th>
+                    <th>Carbs (g)</th>
+                    <th>Calories(kcal)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for food in foods %}
+                <tr>
+                    <td>{{ food[1] }}</td>
+                    <td>{{ food[2] }}</td>
+                    <td>{{ food[3] }}</td>
+                    <td>{{ food[4] }}</td>
+                    <td>{{ food[5] }}</td>
+                    <td>{{ food[6] }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('delete', food_id=food[0]) }}">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Total Nutrition</h2>
+        <div class="totals">
+            <p>Protein: {{ total_protein }} g</p>
+            <p>Fat: {{ total_fat }} g</p>
+            <p>Carbs: {{ total_carbs }} g</p>
+            <p>Calories: {{ total_calories }} kcal</p>
+        </div>
+    </div>
+</body>
+</html>
+
